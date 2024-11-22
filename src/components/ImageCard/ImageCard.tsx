@@ -1,6 +1,6 @@
 import css from './ImageCard.module.css';
 
-type ImafeData = {
+type ImageData = {
   urls: {
     small: string;
     regular: string;
