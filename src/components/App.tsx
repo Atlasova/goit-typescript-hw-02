@@ -7,14 +7,36 @@ import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
 import SearchBar from './SearchBar/SearchBar';
 import fetchImages from '../services/api';
 
+type ImageData = {
+  id: number;
+  urls: {
+    small: string;
+    regular: string;
+  };
+  description: string;
+};
+
+type ModalState = {
+  isOpen: boolean;
+  modalData: string | null;
+};
+
+type DataResponse = {
+  results: ImageData[];
+  total_pages: number;
+};
+
 export default function App() {
-  const [images, setImages] = useState([]);
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [modal, setModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [images, setImages] = useState<ImageData[]>([]);
+  const [query, setQuery] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
+  const [modal, setModal] = useState<ModalState>({
+    isOpen: false,
+    modalData: null,
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
 
   useEffect(() => {
     if (!query) return;
@@ -24,14 +46,14 @@ export default function App() {
         setIsLoading(true);
         setIsError(false);
 
-        const response = await fetchImages(query, page, 5);
+        const response: DataResponse = await fetchImages(query, page);
 
         setImages(prev =>
           page === 1 ? response.results : [...prev, ...response.results]
         );
         setTotal(response.total_pages);
-      } catch (error) {
-        setIsError(error);
+      } catch {
+        setIsError(true);
       } finally {
         setIsLoading(false);
       }
@@ -40,19 +62,19 @@ export default function App() {
     getImages();
   }, [query, page]);
 
-  const handleSetQuery = query => {
+  const handleSetQuery = (query: string): void => {
     setQuery(query);
     setImages([]);
     setPage(1);
   };
 
-  function handleOpenModal(image) {
-    setModal({ isOpen: true, modalData: image });
-  }
+  const handleOpenModal = (url: string): void => {
+    setModal({ isOpen: true, modalData: url });
+  };
 
-  function handleCloseModal() {
+  const handleCloseModal = (): void => {
     setModal({ isOpen: false, modalData: null });
-  }
+  };
 
   return (
     <>

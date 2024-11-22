@@ -1,6 +1,19 @@
 import css from './ImageCard.module.css';
 
-const ImageCard = ({ imageData, handleOpenModal }) => {
+type ImafeData = {
+  urls: {
+    small: string;
+    regular: string;
+  };
+  description: string;
+};
+
+type Props = {
+  imageData: ImageData;
+  handleOpenModal: (url: string) => void;
+};
+
+const ImageCard = ({ imageData, handleOpenModal }: Props) => {
   return (
     <div className={css.imageCard}>
       <img

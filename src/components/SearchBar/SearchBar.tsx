@@ -3,12 +3,19 @@ import { Formik, Form, Field } from 'formik';
 import toast, { Toaster } from 'react-hot-toast';
 import { FcSearch } from 'react-icons/fc';
 
-const SearchBar = ({ setQuery }) => {
-  const initialValues = {
+type SearchFormValues = {
+  query: string;
+};
+type Props = {
+  setQuery: (query: string) => void;
+};
+
+const SearchBar = ({ setQuery }: Props) => {
+  const initialValues: SearchFormValues = {
     query: '',
   };
 
-  const handleSubmit = values => {
+  const handleSubmit = (values: SearchFormValues) => {
     const { query } = values;
     if (!query.trim()) {
       toast.error('Search field is empty!');
